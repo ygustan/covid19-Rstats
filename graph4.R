@@ -6,7 +6,7 @@ library(ggplot2)
 library(dplyr)
 
 ## Importation des données ----
-covid_19_datasets <- read_delim("https://static.data.gouv.fr/resources/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/20221220-190045/vacsi-s-a-reg-2022-12-20-19h00.csv", 
+covid_19_datasets <- read_delim("https://www.data.gouv.fr/fr/datasets/r/8e5e70fa-c082-45e3-a7b8-20862711b142", 
                                 delim = ";", escape_double = FALSE, na = "NA", trim_ws = TRUE)
 
 ## Les données ----
