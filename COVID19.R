@@ -30,7 +30,14 @@ View(new_data_v)
 ## Prédiction sur l’utilisation des vaccins ( Quel vaccin va être le plus utilisé ? ) OUI 3 ----
 
 ## Prédire s’il y’a une corrélation entre les campagnes de vaccination et l'apparition de nouveaux variants OUI 4 ----
+data_correlation = data.frame(covid_19_datasets)
+new_data_correlation = data.frame() 
+new_data_correlation = data_correlation[c("reg","clage_vacsi","jour")]
+new_data_correlation['rappel1'] = data_correlation['n_rappel_h'] + data_correlation['n_rappel_f'] + data_correlation['n_rappel_e']
+new_data_correlation['rappel2'] = data_correlation['n_2_rappel_h'] + data_correlation['n_2_rappel_f'] + data_correlation['n_2_rappel_e']
+new_data_correlation['rappel3'] = data_correlation['n_3_rappel_h'] + data_correlation['n_3_rappel_f'] + data_correlation['n_3_rappel_e']
 
+View(new_data_correlation)
 
 ## Essayer de prédire la ou les catégorie(s) d’âges qui sont plus réticentes à la vaccination OUI 5 ----
 # DATA -> 
@@ -74,13 +81,13 @@ View(new_data_reticence)
 
 # Affichage graphique
 
-# Keep only 3 names
 graph_reticence_sans_region <- new_data_reticence_sans_region %>% 
   filter(clage_vacsi %in% c("04","24","09","11","17","24","29","39","49","59"))
 
-# Plot
 graph_reticence_sans_region %>%
   ggplot( aes(x=month, y=total, group=clage_vacsi, color=clage_vacsi)) +
   geom_line()
+
+
 
 # Prediction 
