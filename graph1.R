@@ -1,16 +1,18 @@
 ## Import ----
 #install.packages("tidyverse")
+install.packages("reshape2")
 library(readr)
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
+library(reshape2)
 
 ## Importation des données ----
 covid_19_datasets <- read_delim("https://www.data.gouv.fr/fr/datasets/r/8e5e70fa-c082-45e3-a7b8-20862711b142", 
                                 delim = ";", escape_double = FALSE, na = "NA", trim_ws = TRUE)
 
 ## Les données ----
-View(covid_19_datasets)
+#View(covid_19_datasets)
 
 
 ## Evolution de la vaccination par sexe & projection OUI  1 ----
@@ -34,9 +36,14 @@ View(new_data_v)
 ## Graphique 
 
 graph1 <- new_data_v %>% 
-  filter(clage_vacsi %in% c("04"))
+  filter(clage_vacsi %in% c("0"))
 
 graph1 %>%
-  ggplot( aes(x=month, y=couv_complet_h)) +
-  geom_line()
+  ggplot( aes(x=month, y=vaccin_h)) +
+  geom_line() +
+  labs(x = "Mois et Années", y = "Total", title = "Nombre total de vaccination par sexe")
 
+graph1 %>%
+  ggplot( aes(x=month, y=vaccin_f, group=paste(vaccin_h, vaccin_f))) +
+  geom_line() + 
+  labs(x = "Mois et Années", y = "Total", title = "Nombre total de vaccination par sexe")
