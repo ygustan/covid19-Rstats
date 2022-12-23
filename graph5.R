@@ -50,14 +50,24 @@ new_data_reticence_sans_region['total'] = new_data_reticence_sans_region['nCompl
 View(new_data_reticence_sans_region)
 #View(new_data_reticence)
 
-# Affichage graphique
+# Affichage graphique des vaccinations par population d'age
 
-graph_reticence_sans_region <- new_data_reticence_sans_region %>% 
-  filter(clage_vacsi %in% c("04","24","09","11","17","24","29","39","49","59"))
+graph_reticence_sans_region <- new_data_reticence_sans_region #%>% 
+  #filter(clage_vacsi %in% c("04","24","09","11","17","24","29","39","49","59"))
 
 graph_reticence_sans_region %>%
   ggplot( aes(x=month, y=total, group=clage_vacsi, color=clage_vacsi)) +
-  geom_line()
+  geom_line() +
+  scale_color_viridis(discrete = TRUE) +
+  ggtitle("Rétinence à la vacinnation")
 
-
+# Affichage totals de la vaccination.    
+    
+graph_total_vac <- new_data_reticence_sans_region %>% 
+    filter(clage_vacsi %in% c("0"))
+    
+graph_total_vac %>%
+    ggplot( aes(x=month, y=total, group=clage_vacsi, color=clage_vacsi)) +
+    geom_line()
+  
 # Prediction 
