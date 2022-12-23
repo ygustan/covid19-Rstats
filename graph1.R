@@ -38,12 +38,7 @@ View(new_data_v)
 graph1 <- new_data_v %>% 
   filter(clage_vacsi %in% c("0"))
 
-graph1 %>%
-  ggplot( aes(x=month, y=vaccin_h)) +
-  geom_line() +
-  labs(x = "Mois et Années", y = "Total", title = "Nombre total de vaccination par sexe")
-
-graph1 %>%
-  ggplot( aes(x=month, y=vaccin_f, group=paste(vaccin_h, vaccin_f))) +
-  geom_line() + 
+ggplot(graph1, aes(x=month)) + 
+  geom_line(aes(y = vaccin_h), color = "blue") + 
+  geom_line(aes(y = vaccin_f), color="red") +
   labs(x = "Mois et Années", y = "Total", title = "Nombre total de vaccination par sexe")
