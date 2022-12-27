@@ -27,28 +27,51 @@ new_data_correlation['rappel3'] = data_correlation['n_3_rappel_h'] + data_correl
 # new_data_correlation <- new_data_correlation[!apply(new_data_correlation[-1:-3], 1, function(x) all(x == 0)), ]
 # View(new_data_correlation)
 # Calculate the correlations between the columns
-correlations <- cor(x = new_data_correlation[,c("rappel1", "rappel2", "rappel3")], y=new_data_correlation$rappel2)
+correlations <- cor(x = new_data_correlation[,c("rappel1", "rappel3")], y=new_data_correlation$rappel2)
+correlations1 <- cor(x = new_data_correlation[,c("rappel1", "rappel2")], y=new_data_correlation$rappel3)
+correlations2 <- cor(x = new_data_correlation[,c("rappel2", "rappel3")], y=new_data_correlation$rappel1)
 
 correlations
+correlations1
+correlations2
 # Correlation of Person
 correlation1 <- cor(new_data_correlation$rappel1, new_data_correlation$rappel2)
+correlation1_corrected <- cor(log(new_data_correlation$rappel1), new_data_correlation$rappel2)
 correlation2 <- cor(new_data_correlation$rappel2, new_data_correlation$rappel3)
-plot(new_data_correlation$rappel1, new_data_correlation$rappel2, main=paste("Correlation:", round(correlation1, 2)), xlab = "1er Rappel", ylab="2ème Rappel" )
+plot(new_data_correlation$rappel1, new_data_correlation$rappel2, main=paste("Correlation:", round(correlation1_corrected, 2)), xlab = "1er Rappel", ylab="2ème Rappel" )
 
-
+correlation1_corrected
 # Plot the correlation using ggplot2
-ggplot(new_data_correlation, aes(x=rappel1, y=rappel2)) +
+new_data_correlation %>%
+  mutate(rappel1_log = log(rappel1)) %>%
+  ggplot(aes(x=rappel1_log, y=rappel2, color=clage_vacsi)) +
   geom_point() +
-  ggtitle(paste("Correlation:", round(correlation1, 2), 
-                "(p-value:", round(correlation1, 2), ")"))
+  # scale_x_discrete(labels = c("Jan", "Feb", "Mar", "Avr", "Mai", "Juin", "Jul", "Août", "Sep", "Oct", "Nov", "Dec")) +
+  labs(x = "Rappel 1 transformé (log(rappel1))", y = "Rappels", title = "Correlations entre les rappels pour toutes les classes d'âge") +
+  geom_smooth(method = "lm", se=TRUE, color="black")
+  ggtitle(paste("Correlations :", round(cor(correlations, c(new_data_correlation$appel1, new_data_correlation$rappel2, new_data_correlation$rappel3)), 2),
+                "(p-value:", round(cor(correlations, c(new_data_correlation$rappel1, new_data_correlation$rappel2, new_data_correlation$rappel3)), 2), ")"))
 
 # Calculate Spearman's rank correlation coefficient between columns 'A' and 'B'
 sperman_correlation_1 <- cor.test(new_data_correlation$rappel1, new_data_correlation$rappel2, method='spearman')
+hendall_correlation_1 <- cor.test(new_data_correlation$rappel1, new_data_correlation$rappel2, method='kendall')
+# sperman_correlation_1 <- cor.test(new_data_correlation$rappel1, new_data_correlation$rappel2, method='spearman')
 
+sperman_correlation_1
+hendall_correlation_1
 # Plot the correlation using the plot function
-plot(new_data_correlation$rappel1, new_data_correlation$rappel2, main=paste("Correlation:", round(sperman_correlation_1$estimate, 2)))
+plot(new_data_correlation$rappel1, new_data_correlation$rappel2, main=paste("Correlation:", round(sperman_correlation_1$estimate, 2)), xlab="Rappel 1", ylab="Rappel 2")
 
-
+new_data_correlation %>%
+  mutate(rappel1_log = log(rappel1)) %>%
+  ggplot(aes(x=rappel1_log, y=rappel2, color=clage_vacsi)) +
+  geom_point() +
+  labs(x = "Rappel 1 transformé (log(rappel1))", y = "Rappels", title = "Correlations entre les rappels pour toutes les classes d'âge") +
+  geom_smooth(method = "lm", se=TRUE, color="blue")
+  ggtitle(paste("Correlation de Spearman enrete les rappels 1 et rappels 2:", round(sperman_correlation_1, 2),
+              "(p-value:", round(sperman_correlation_1, 2),")"))
 # Create a scatterplot matrix
 # scatterplotMatrix(data = new_data_correlation, x=correlations, smooth = TRUE, diag.panel = histogram)
 chart.Correlation(new_data_correlation[,c("rappel1", "rappel2", "rappel3")], histogram = TRUE, method = "pearson")
+chart.Correlation(new_data_correlation[,c("rappel1", "rappel2", "rappel3")], method = "kendall")
+chart.Correlation(new_data_correlation[,c("rappel1", "rappel2", "rappel3")], histogram = False, method = "spearman")
